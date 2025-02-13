@@ -8,6 +8,7 @@ env:
     AWS_ACCOUNT_ID: /myapp/aws/account_id
     AWS_DEFAULT_REGION: /myapp/aws/region
     ECR_REPOSITORY_NAME: /myapp/ecr/repository_name
+    #test#
 phases:
   install:
     runtime-versions:
