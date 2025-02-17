@@ -1,0 +1,35 @@
+version: 0.2
+
+env:
+  parameter-store:
+    DOCKER_REGISTRY_USERNAME: /myapp/docker/username
+    DOCKER_REGISTRY_PASSWORD: /myapp/docker/password
+    DOCKER_REGISTRY_URL: /myapp/docker/url
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.11
+
+  pre_build:
+    commands:
+      - echo "Installing dependencies..."
+      - pip install -r day-14/simple-python-app/requirements.txt || exit 1
+
+  build:
+    commands:
+      - cd day-14/simple-python-app
+      - echo "Logging into Docker registry..."
+      - if [ -z "$DOCKER_REGISTRY_USERNAME" ] || [ -z "$DOCKER_REGISTRY_PASSWORD" ] || [ -z "$DOCKER_REGISTRY_URL" ]; then
+          echo "Docker registry credentials are missing";
+          exit 1;
+        fi
+      - echo "$DOCKER_REGISTRY_PASSWORD" | docker login "$DOCKER_REGISTRY_URL" -u "$DOCKER_REGISTRY_USERNAME" --password-stdin || exit 1
+      - echo "Building Docker image..."
+      - docker build -t "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/simple-python-app:latest" . || exit 1
+      - echo "Pushing Docker image..."
+      - docker push "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/simple-python-app:latest" || exit 1
+
+  post_build:
+    commands:
+      - echo "Build is Successful"
