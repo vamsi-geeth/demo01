@@ -1,4 +1,4 @@
-# tHIS IS A TEST TO CHECK
+# THIS IS A TEST TO CHECK
 
 # AWS Continuous Integration Demo
 
