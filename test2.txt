@@ -1,2 +1,3 @@
 forgot to delete the branch
 made changes in remote
+new changes
